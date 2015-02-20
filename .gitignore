@@ -1,3 +1,11 @@
+appmedia/
+migrations/
+whoosh_index/
+
+settings.py
+settings_production.py
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
