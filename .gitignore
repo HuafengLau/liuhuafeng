@@ -5,6 +5,8 @@ whoosh_index/
 settings.py
 settings_production.py
 
+.sqlite3
+db.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

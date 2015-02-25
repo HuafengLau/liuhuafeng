@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+
+{% block title %}
+Huafeng的思考/文字/刘华峰
+{% endblock %}
+
+
+{% block body %}
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-md-7 col-md-offset-2'>
+        {% for blog in ten_blogs %}
+            <div>
+                <h2><a href='/blog/{{blog.id}}/'>{{blog.title}}</a></h2>
+                <p>By Huafeng on {% showBlogTime blog %} </p>
+                <p>{% autoescape off %}{{blog.text}}{% endautoescape %}</p>
+                <div class='readMore'>Continue reading <span style="font-size:20px">→</span></div>
+                <hr style="height:1px;border:none;border-top:1px solid grey;padding-bottom:10px;margin-top:30px" />
+            </div>
+        {% endfor %}
+        
+        </div>
+
+    </div>
+</div>
+{% endblock %}

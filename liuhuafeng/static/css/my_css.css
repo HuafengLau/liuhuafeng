@@ -1,0 +1,119 @@
+/* CSS for all HTML */
+
+.keyword{
+	color: red;
+}
+
+.hidden {
+	display:none;
+}
+
+.show{
+	display:inline;
+}
+
+.underline{
+    text-decoration: underline;
+}
+
+.margin-top-6px{
+	margin-top: 6px;
+}
+
+.font-red{
+    color: red;
+}
+
+.font-grey{
+	color: #999999;
+}
+
+.font-color-link{
+	color: #2a7cc0;
+}
+
+.font-link{
+	color: #2a7cc0;
+}
+
+.font-black{
+    color: black;
+}
+
+.font-white{
+	color: white;
+}
+
+.font-green{
+    color: green;
+}
+
+.font-blue{
+    color: blue;
+}
+
+.font-orange{
+	color: #ff4500;
+}
+
+.font-jin{
+	color: #e69800;
+}
+
+.font-yin{
+	color: #a5a5a5;
+}
+
+.font-tong{
+	color: #d97443;
+}
+
+.font-333{
+	color:#333333;
+}
+
+
+.width_100{
+    width: 100%;
+}
+
+.hand_over{
+    cursor: pointer;
+}
+
+.clear_both{
+    clear:both;
+}
+
+.both_clear{
+    clear:both;
+}
+
+.YaHei{
+    font-family:'Microsoft YaHei' ;
+}
+
+.readMore{
+	margin-top:20px;
+    width:165px;
+    padding: 6px 0px 8px 15px;
+	background: black;
+	color: #fff;
+}
+
+#navbar{
+    padding: 15px 0px;
+    background: black;
+	color: #fff;
+}
+
+#scrollUp {
+    bottom: 40px;
+	right: 160px;
+	padding: 10px 20px;
+	background: black;
+	color: #fff;
+}
+
+
+

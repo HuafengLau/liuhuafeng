@@ -1,0 +1,73 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head lang='zh-CN'>
+    <meta charset="utf-8" />
+	<link rel='shortcut icon' href='{{STATIC_URL}}img/logo11.ico'>
+	<title>{% block title %}{% endblock %}</title>   
+	{% block search %}
+    <meta name="description" content="刘华峰的文字" />
+    <meta name="keywords" content="刘华峰" />
+
+    {% endblock %}
+	{% block meta %}
+    {% endblock %}
+	{% block moreLink %}
+	{% endblock %}
+    <!-- Bootstrap -->
+
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/my_css.css' %}" rel="stylesheet" media="screen">
+	{% block moreStyle %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	{% endblock %}
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <style>
+    body{font-family:"Microsoft YaHei","Microsoft YaHei UI","ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;}
+    h1, .h1, h2, .h2, h3, .h3, h4, .h4, .lead {font-family:"ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;}
+    pre code { background: transparent; }
+    </style>	-->
+    <style>
+    body{color:black}
+    </style>
+	{% block moreCSS %}
+	{% endblock %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container-fluid" style="padding-top:1%;padding-bottom:1%">
+        <div class='row'>
+            <div class='col-md-12'>
+            <p class='text-center' style="font-size:38px">Huafeng的思考<span style="font-size:20px"> | 产品小生，梦想改变世界</span></p>
+            </div>
+        </div>        
+        <div class='row' id='navbar'>
+            <div class='col-md-1 col-md-offset-2'><a href='/' class='font-white' style='font-size:20px'>主页</a></div>
+            <div class='col-md-1'><a href='/contents/' class='font-white' style='font-size:20px'>目录</a></div>
+            <div class='col-md-1'><a href='/about/' class='font-white' style='font-size:20px'>我</a></div>
+        </div>
+    </div>
+
+    <!-- main body of the html -->
+    {% block body %}
+    {% endblock %}
+    
+    {% block botoom_bav %}
+    {% endblock %}
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
+    <script src="{% static 'js/my_scripts.js' %}"></script>
+  </body>
+</html>
