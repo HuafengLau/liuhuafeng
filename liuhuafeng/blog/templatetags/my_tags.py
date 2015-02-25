@@ -2,8 +2,6 @@
 
 from django import template
 from datetime import datetime
-import re
-import pytz
 
 register = template.Library()
 
