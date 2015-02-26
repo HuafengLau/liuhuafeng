@@ -22,6 +22,10 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ('time', 'part','tag')
     ordering = ('time', )
     
+    class Media:
+        js = [ '/static/editor/tinymce/tinymce.min.js',
+             '/static/editor/tinymce/tinymce_config.js',]
+    
 admin.site.register(Part, PartAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Blog, BlogAdmin)

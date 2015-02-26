@@ -17,6 +17,13 @@ $(document).ready(function(){
         zIndex: 2147483647 // Z-Index for the overlay
 	  });
 	});
+    
+     $("img").each(function() {
+                var maxwidth = 725;
+                if ($(this).width() > maxwidth) {
+                        $(this).width(maxwidth);
+                }
+        });
 	
 
 });

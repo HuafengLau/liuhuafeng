@@ -14,6 +14,7 @@ def home(request):
         context_instance=RequestContext(request))
         
 def about(request):
+    blog = Blog.objects.get(title='aboutMe')
     return render_to_response('about.html',locals(),
         context_instance=RequestContext(request))
         

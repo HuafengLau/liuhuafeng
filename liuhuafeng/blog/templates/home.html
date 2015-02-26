@@ -14,7 +14,7 @@ Huafeng的思考/文字/刘华峰
             <div>
                 <h2><a href='/blog/{{blog.id}}/'>{{blog.title}}</a></h2>
                 <p>By Huafeng on {% showBlogTime blog %} </p>
-                <p>{% autoescape off %}{{blog.text}}{% endautoescape %}</p>
+                <div>{% autoescape off %}{{blog.text}}{% endautoescape %}</div>
                 <div class='readMore'>Continue reading <span style="font-size:20px">→</span></div>
                 <hr style="height:1px;border:none;border-top:1px solid grey;padding-bottom:10px;margin-top:30px" />
             </div>
