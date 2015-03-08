@@ -38,6 +38,6 @@ class Blog(models.Model):
         return '%s' % (self.time)
     
     class Meta:
-        ordering = ['time',]
+        ordering = ['-time',]
         verbose_name = u'文章'
         verbose_name_plural = u'文章'        
