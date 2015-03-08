@@ -29,7 +29,7 @@ class Tag(models.Model):
 class Blog(models.Model):
     title = models.CharField(max_length=100,blank=True,verbose_name=u'标题')
     text = models.TextField(blank=True,verbose_name=u'文本')
-    time = models.DateTimeField(auto_now_add=True,verbose_name=u'发表时间')
+    time = models.DateTimeField(verbose_name=u'发表时间')
 	
     part = models.ForeignKey(Part, null=True,blank=True,verbose_name=u'分类')
     tag = models.ManyToManyField(Tag, null=True,blank=True,verbose_name=u'标签')

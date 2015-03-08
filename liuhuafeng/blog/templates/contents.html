@@ -14,6 +14,10 @@ Huafeng的思考/文字/刘华峰
         {% for blog in blogs_2015 %}
         <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a></p>
         {% endfor %}
+        <h3>2014年</h3>
+        {% for blog in blogs_2014 %}
+        <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a></p>
+        {% endfor %}
         </div>
     </div>
 </div>
