@@ -38,9 +38,9 @@ class showBlogMDNode(template.Node):
         month = blog.time.month
         day = blog.time.day
         if month < 10:
-            month = "0%s' % month
+            month = "0%s" % month
         if day <10:
-            day = "0%s' % day
+            day = "0%s" % day
         return u'%s月 %s日' %(month,day)
             
 def showBlogMD(parser, token):
