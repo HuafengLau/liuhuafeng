@@ -13,8 +13,8 @@ Huafeng的思考/文字/刘华峰
             <div>
                 <p><a href='/about/'>作者：刘华峰</a></p>
                 <p>时间：{% showBlogTime blog %}</p>
-                <p>分类：{{blog.part.Cpart}}</p>
-                <p>标签：{% for tag in blog.tag.all %}<span>{{tag.Ctag}}</span>{% endfor %}</p>
+                <p>分类：{{blog.part.Cpart}}&nbsp;&nbsp;</p>
+                <p>标签：{% for tag in blog.tag.all %}<span>{{tag.Ctag}}&nbsp;&nbsp;</span>{% endfor %}</p>
                 <h2 href='/blog/{{blog.id}}/'>{{blog.title}}</h2>
                 <p>{% autoescape off %}{{blog.text}}{% endautoescape %}</p>
                 <hr style="height:1px;border:none;border-top:1px solid grey;padding-bottom:10px;margin-top:30px" />
