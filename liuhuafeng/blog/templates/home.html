@@ -2,14 +2,14 @@
 {% load my_tags %}
 
 {% block title %}
-Huafeng的思考/文字/刘华峰
+华峰的思考/文字/刘华峰
 {% endblock %}
 
 
 {% block body %}
 <div class='container-fluid'>
     <div class='row'>
-        <div class='col-md-6 col-md-offset-2'>
+        <div class='col-md-6 col-md-offset-2 col-xs-offset-1 col-xs-10'>
         {% for blog in ten_blogs %}
             <div>
                 <h2><a href='/blog/{{blog.id}}/'>{{blog.title}}</a></h2>

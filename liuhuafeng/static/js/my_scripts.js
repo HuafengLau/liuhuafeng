@@ -1,11 +1,10 @@
 $(document).ready(function(){   
-    
-	$(function () {
+    $(function () {
 	  $.scrollUp({
 		scrollName: 'scrollUp', // Element ID
-        scrollDistance: 300, // Distance from top/bottom before showing element (px)
+        scrollDistance: 400, // Distance from top/bottom before showing element (px)
         scrollFrom: 'top', // 'top' or 'bottom'
-        scrollSpeed: 300, // Speed back to top (ms)
+        scrollSpeed: 400, // Speed back to top (ms)
         easingType: 'linear', // Scroll to top easing (see http://easings.net/)
         animation: 'fade', // Fade, slide, none
         animationInSpeed: 200, // Animation in speed (ms)
@@ -17,13 +16,6 @@ $(document).ready(function(){
         zIndex: 2147483647 // Z-Index for the overlay
 	  });
 	});
-    
-     $("img").each(function() {
-                var maxwidth = 725;
-                if ($(this).width() > maxwidth) {
-                        $(this).width(maxwidth);
-                }
-        });
 	
 
 });
