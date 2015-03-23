@@ -1,6 +1,6 @@
 /* CSS for all HTML */
 
-
+a:visited {color: purple !important}
 
 .keyword{
 	color: red;
