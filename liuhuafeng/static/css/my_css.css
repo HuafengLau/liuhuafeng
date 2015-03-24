@@ -1,6 +1,8 @@
 /* CSS for all HTML */
 
-a:visited {color: purple !important}
+/* a.font-white:visited {color: purple !important} */
+
+a.font-white:visited {color: white !important} 
 
 .keyword{
 	color: red;
