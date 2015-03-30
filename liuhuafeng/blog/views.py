@@ -8,8 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 from blog.models import Blog
 
-def home(request):             
-    ten_blogs = Blog.objects.all().order_by('-time')[:20]
+hidden = ['compareThree',]
+
+def home(request):                 
+    ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:20]
     return render_to_response('home.html',locals(),
         context_instance=RequestContext(request))
         
@@ -19,8 +21,8 @@ def about(request):
         context_instance=RequestContext(request))
         
 def contents(request):
-    blogs_2015 = Blog.objects.filter(time__year=2015)
-    blogs_2014 = Blog.objects.filter(time__year=2014)
+    blogs_2015 = Blog.objects.filter(time__year=2015).exclude(title__in = hidden)
+    blogs_2014 = Blog.objects.filter(time__year=2014).exclude(title__in = hidden)
     return render_to_response('contents.html',locals(),
         context_instance=RequestContext(request))
                
