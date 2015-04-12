@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from blog.models import Blog
 
-hidden = ['compareThree',]
+hidden = ['compareThree','Discover']
 
 def home(request):                 
     ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:20]
@@ -18,6 +18,11 @@ def home(request):
 def about(request):
     blog = Blog.objects.get(title='aboutMe')
     return render_to_response('about.html',locals(),
+        context_instance=RequestContext(request))
+        
+def discover(request):
+    blog = Blog.objects.get(title='Discover')
+    return render_to_response('discover.html',locals(),
         context_instance=RequestContext(request))
         
 def contents(request):

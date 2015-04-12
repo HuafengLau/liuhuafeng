@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
-from blog.views import home,about,contents
+from blog.views import home,about,contents,discover
 
 urlpatterns = patterns('',
     # Examples:
@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     
     (r'^$', home),
     url(r'^about/', about),
+    url(r'^discover/', discover),
     url(r'^contents/', contents),
     url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls)),
