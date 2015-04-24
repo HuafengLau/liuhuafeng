@@ -5,10 +5,19 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-
 from blog.models import Blog
+import urllib2,json
 
 hidden = ['compareThree','Discover']
+
+def getCommentNum(id):
+    duoshuo_url = 'http://api.duoshuo.com/threads/counts.json?short_name=liuhuafeng&threads=%s' % id
+    web = urllib2.urlopen(duoshuo_url)
+    content = web.read()
+    info = json.loads(content)
+    id_s = '%s' % id
+    num = info['response'][id_s]['comments']
+    return num
 
 def home(request):                 
     ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:20]

@@ -2,8 +2,32 @@
 
 from django import template
 from datetime import datetime
+from blog.views import getCommentNum
 
 register = template.Library()
+
+class showCommentWordsNode(template.Node):
+    def __init__(self,sequence):
+        self.sequence = sequence
+
+    def render(self, context):
+        blog = self.sequence.resolve(context, True)
+        id = blog.id
+        commentNum = getCommentNum(id)
+        if commentNum == 0:
+            commentWords = u'等你评论'
+        else:
+            commentWords = u' %s 个评论' % commentNum
+        return commentWords
+            
+def showCommentWords(parser, token):
+    try:
+        tag_name, blog= token.split_contents() 
+    except:
+        raise template.TemplateSyntaxError
+        
+    sequence = parser.compile_filter(blog)    
+    return showCommentWordsNode(sequence)
 
 class showBlogTimeNode(template.Node):
     def __init__(self,sequence):
@@ -54,3 +78,4 @@ def showBlogMD(parser, token):
     
 register.tag('showBlogTime', showBlogTime)
 register.tag('showBlogMD', showBlogMD)
+register.tag('showCommentWords', showCommentWords)
