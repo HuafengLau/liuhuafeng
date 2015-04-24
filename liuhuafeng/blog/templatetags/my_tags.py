@@ -6,6 +6,29 @@ from blog.views import getCommentNum
 
 register = template.Library()
 
+class showCommentWordsNode2(template.Node):
+    def __init__(self,sequence):
+        self.sequence = sequence
+
+    def render(self, context):
+        blog = self.sequence.resolve(context, True)
+        id = blog.id
+        commentNum = getCommentNum(id)
+        if commentNum == 0:
+            commentWords = ''
+        else:
+            commentWords = u'%s 条评论' % commentNum
+        return commentWords
+            
+def showCommentWords2(parser, token):
+    try:
+        tag_name, blog= token.split_contents() 
+    except:
+        raise template.TemplateSyntaxError
+        
+    sequence = parser.compile_filter(blog)    
+    return showCommentWordsNode2(sequence)
+
 class showCommentWordsNode(template.Node):
     def __init__(self,sequence):
         self.sequence = sequence
@@ -17,7 +40,7 @@ class showCommentWordsNode(template.Node):
         if commentNum == 0:
             commentWords = u'等你评论'
         else:
-            commentWords = u' %s 个评论' % commentNum
+            commentWords = u' %s 条评论' % commentNum
         return commentWords
             
 def showCommentWords(parser, token):
@@ -79,3 +102,4 @@ def showBlogMD(parser, token):
 register.tag('showBlogTime', showBlogTime)
 register.tag('showBlogMD', showBlogMD)
 register.tag('showCommentWords', showCommentWords)
+register.tag('showCommentWords2', showCommentWords2)
