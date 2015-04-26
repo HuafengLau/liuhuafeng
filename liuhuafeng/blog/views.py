@@ -12,12 +12,16 @@ hidden = ['compareThree','Discover']
 
 def getCommentNum(id):
     duoshuo_url = 'http://api.duoshuo.com/threads/counts.json?short_name=liuhuafeng&threads=%s' % id
-    web = urllib2.urlopen(duoshuo_url)
-    content = web.read()
-    info = json.loads(content)
-    id_s = '%s' % id
-    num = info['response'][id_s]['comments']
-    return num
+    try:
+        web = urllib2.urlopen(duoshuo_url)
+        content = web.read()
+        info = json.loads(content)
+        id_s = '%s' % id
+        num = info['response'][id_s]['comments']
+        return num 
+    except:
+        return 0
+    
 
 def home(request):                 
     ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:20]
