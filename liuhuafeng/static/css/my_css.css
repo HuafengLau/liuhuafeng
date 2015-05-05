@@ -4,6 +4,14 @@
 
 a.font-white:visited {color: white !important} 
 
+p{
+    line-height: 20.4799995422363px;
+    font-family: Helvetica, Arial, sans-serif;
+    word-wrap: break-word;
+    color: rgb(34, 34, 34);
+    font-size: 13px;
+}
+
 .keyword{
 	color: red;
 }
