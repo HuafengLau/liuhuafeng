@@ -24,7 +24,7 @@ def getCommentNum(id):
     
 
 def home(request):                 
-    ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:20]
+    ten_blogs = Blog.objects.exclude(title__in = hidden).order_by('-time')[:6]
     return render_to_response('home.html',locals(),
         context_instance=RequestContext(request))
         
