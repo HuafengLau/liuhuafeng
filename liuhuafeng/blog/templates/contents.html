@@ -10,18 +10,25 @@ Huafeng的思考/文字/刘华峰
 <div class='container-fluid'>
     <div class='row'>
         <div class='col-md-6 col-md-offset-2 col-xs-offset-1 col-xs-10'>
-        <h3>2015年</h3>
-        {% for blog in blogs_2015 %}
-        <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>
-        &nbsp;&nbsp;<small><span style='color:#666666'>{% showCommentWords2 blog %}</span></small>
-        </p>
-        {% endfor %}
-        <h3>2014年</h3>
-        {% for blog in blogs_2014 %}
-        <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>
-        &nbsp;&nbsp;<small><span style='color:#666666'>{% showCommentWords2 blog %}</span></small>
-        </p>
-        {% endfor %}
+            <h3>2015年</h3>
+            {% for blog in blogs_2015 %}
+            <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>
+            &nbsp;&nbsp;<small><span style='color:#666666'>{% showCommentWords2 blog %}</span></small>
+            </p>
+            {% endfor %}
+            <h3>2014年</h3>
+            {% for blog in blogs_2014 %}
+            <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>
+            &nbsp;&nbsp;<small><span style='color:#666666'>{% showCommentWords2 blog %}</span></small>
+            </p>
+            {% endfor %}
+        </div>
+        <div class='col-md-3 col-md-offset-1 hidden-xs hidden-sm'>
+            <div class='affix'>
+                <p>文章同步更新于微信公众号:</p>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span><b>华峰的思考</b></span>
+                <img class="img-responsive" style="height: 60%;width:60%" src="/static/img/20150919/huafengthink.jpg" alt="五彩旗" />
+            </div>
         </div>
     </div>
 </div>
