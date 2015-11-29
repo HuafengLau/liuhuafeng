@@ -267,7 +267,7 @@ def userAddFund(request):
 
         response_data = {
             "meta":{
-                "code":200,
+                "code":0,
                 "msg":''
             },
             "data":""
@@ -279,8 +279,22 @@ def userAddFund(request):
             
             fundCode = request.POST.get('fundCode')
             types = request.POST.get('types')
-            share = request.POST.get('share')
-            profitBefore = request.POST.get('profitBefore')
+            if types in ['lowRisk','middleRisk','highRisk']:
+                pass
+            else：
+                response_data['meta']['code'] = 211
+                response_data['meta']['msg'] = '风险类型有误'
+                return HttpResponse(json.dumps(response_data), 
+                    content_type='application/json')
+            try:
+                share = float(request.POST.get('share'))
+                profitBefore = float(request.POST.get('profitBefore'))
+            except Exception, e:
+                response_data['meta']['code'] = 210
+                response_data['meta']['msg'] = '收益或份额格式有误'
+                return HttpResponse(json.dumps(response_data), 
+                    content_type='application/json')
+            
             year = getThisYear()
 
             #基金已收录
@@ -365,3 +379,8 @@ def userAddFund(request):
             response_data['meta']['msg'] = '账号不存在'
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
+    else：
+        response_data['meta']['code'] = 212
+        response_data['meta']['msg'] = '参数有误'
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
