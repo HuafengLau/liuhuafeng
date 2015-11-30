@@ -80,8 +80,8 @@ def login(request):
     if 'phone' in request.POST and 'pwd' in request.POST:
         response_data = {
             "meta":{
-                "code":200,
-                "msg":'登录成功'
+                "code":0,
+                "msg":''
             },
             "data":""
         }
@@ -89,13 +89,24 @@ def login(request):
             phone = request.POST.get('phone')
             pwd = request.POST.get('pwd')
             passPortExist = PassPort.objects.get(phone=phone,pwd=pwd)
-
+            response_data['meta']['code'] = 200
+            response_data['meta']['msg'] = '登录成功'
         except Exception, e:
             response_data['meta']['code'] = 201
             response_data['meta']['msg'] = '登录失败'
         finally:
             return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
+    else:
+        response_data = {
+            "meta":{
+                "code": 202,
+                "msg": '访问方式有误'
+            },
+            "data":""
+        }
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
 
 def getPassPort(phone):
     try:
