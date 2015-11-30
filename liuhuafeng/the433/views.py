@@ -17,17 +17,24 @@ def register(request):
     	#data=simplejson.loads(request.raw_post_data)
         response_data = {
             "meta":{
-                "code":200,
-                "msg":'注册成功'
+                "code":0,
+                "msg":''
             },
             "data":""
         }
 
     	if 'phone' in request.POST and 'pwd' in request.POST and 'nicName' in request.POST:
     		
-            phone = request.POST.get('phone')
-    		pwd = request.POST.get('pwd')
-    		nicName = request.POST.get('nicName')
+            try:
+                phone = str(request.POST.get('phone'))
+                pwd = str(request.POST.get('pwd'))
+                nicName = str(request.POST.get('nicName'))
+            except Exception, e:
+                response_data['meta']['code'] = 203
+                response_data['meta']['msg'] = '参数格式有误'
+                return HttpResponse(json.dumps(response_data), 
+                    content_type='application/json')
+
 
             try:
                 phoneExist = PassPort.objects.get(phone=phone)
@@ -46,7 +53,8 @@ def register(request):
                     passPort = newPassPort
                     )
                 newProfile.save()
-        		response_data['result'] = 'success'
+        		response_data['meta']['code'] = 200
+                response_data['meta']['msg'] = '注册成功'
             finally:
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
@@ -56,6 +64,17 @@ def register(request):
             response_data['meta']['msg'] = '参数有误'
     	    return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
+    else：
+        response_data = {
+            "meta":{
+                "code": 204,
+                "msg": '访问方式有误'
+            },
+            "data":""
+        }
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
+
 
 def login(request):
     if 'phone' in request.POST and 'pwd' in request.POST:
