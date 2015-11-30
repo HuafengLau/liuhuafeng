@@ -10,8 +10,9 @@ import json
 from the433.models import PassPort,Profile,Fund,FundNet,UserFundShare,UserFundProfit,UserFundOldProfit
 from bs4 import BeautifulSoup
 import urllib2
+from django.views.decorators.csrf import csrf_exempt
 
-@csrf_protect
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
     	#data=simplejson.loads(request.raw_post_data)
