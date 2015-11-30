@@ -11,7 +11,7 @@ from the433.models import PassPort,Profile,Fund,FundNet,UserFundShare,UserFundPr
 from bs4 import BeautifulSoup
 import urllib2
 
-
+@csrf_protect
 def register(request):
     if request.method == 'POST':
     	#data=simplejson.loads(request.raw_post_data)
