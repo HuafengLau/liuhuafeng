@@ -46,25 +46,25 @@ def register(request):
                     phone = phone,
                     pwd = pwd,
                     nicName = nicName
-                    )
+                )
                 newPassPort.save()
 
                 newProfile = Profile(
                     passPort = newPassPort
-                    )
+                )
                 newProfile.save()
-        		response_data['meta']['code'] = 200
+                response_data['meta']['code'] = 200
                 response_data['meta']['msg'] = '注册成功'
             finally:
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
 
-    	else：
+        else:
             response_data['meta']['code'] = 202
             response_data['meta']['msg'] = '参数有误'
     	    return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
-    else：
+    else:
         response_data = {
             "meta":{
                 "code": 204,
@@ -183,7 +183,7 @@ def addFund(fundCode):
             )        
             newFund.save()
             return True
-        else：
+        else:
             return False
     except Exception, e:
         return False
@@ -207,7 +207,7 @@ def updateFundNet(fundCode):
             thatDay = datetime.date(year,month,day)
             if getFundNet(fund,thatDay):
                 pass
-            else：               
+            else:               
                 newFundNet = FundNet(
                     fund = fund,
                     date = thatDay,
@@ -219,9 +219,9 @@ def updateFundNet(fundCode):
         today = datetime.date.today()
         if today.isoformat() in fundNet:
             return '%sdays,today' % n
-        else：
+        else:
             return '%sdays,noToday' % n
-    else：
+    else:
         return False
 
 def addShare(passPort,fund,types,share):
@@ -280,8 +280,7 @@ def addOldProfit(passPort,fund,year,profitBefore):
         
 
 def userAddFund(request):
-    if 'phone' in request.POST and 'fundCode' in request.POST and 'share' in request.POST and
-        'profitBefore' in request.POST and 'types' in request.POST:
+    if 'phone' in request.POST and 'fundCode' in request.POST and 'share' in request.POST and 'profitBefore' in request.POST and 'types' in request.POST:
         phone = request.POST.get('phone') 
 
         response_data = {
@@ -300,7 +299,7 @@ def userAddFund(request):
             types = request.POST.get('types')
             if types in ['lowRisk','middleRisk','highRisk']:
                 pass
-            else：
+            else:
                 response_data['meta']['code'] = 211
                 response_data['meta']['msg'] = '风险类型有误'
                 return HttpResponse(json.dumps(response_data), 
@@ -331,7 +330,7 @@ def userAddFund(request):
                     try:                      
                         if addShare(passPort,fund,types,share):
                             pass
-                        else：
+                        else:
                             response_data['meta']['code'] = 202
                             response_data['meta']['msg'] = '基金已收录，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
@@ -341,7 +340,7 @@ def userAddFund(request):
                             response_data['meta']['code'] = 200
                             response_data['meta']['msg'] = '基金已收录，添加成功'
                             updateFundNet(fundCode)
-                        else：
+                        else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
                             response_data['meta']['code'] = 203
@@ -356,14 +355,14 @@ def userAddFund(request):
                             content_type='application/json')                        
                 
             #基金未收录
-            else：             
+            else:             
                 #收录基金成功
                 if addFund(fundCode): 
                     fund = getFund(fundCode)
                     try:
                         if addShare(passPort,fund,types,share):
                             pass
-                        else：
+                        else:
                             response_data['meta']['code'] = 205
                             response_data['meta']['msg'] = '收录基金成功，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
@@ -373,7 +372,7 @@ def userAddFund(request):
                             response_data['meta']['code'] = 200
                             response_data['meta']['msg'] = '收录基金成功，添加成功'
                             updateFundNet(fundCode)
-                        else：
+                        else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
                             response_data['meta']['code'] = 206
@@ -386,19 +385,19 @@ def userAddFund(request):
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')  
                 #收录基金失败
-                else：
+                else:
                     response_data['meta']['code'] = 208
                     response_data['meta']['msg'] = '收录基金失败'
                     return HttpResponse(json.dumps(response_data), 
                         content_type='application/json')
 
         #手机号不存在
-        else：
+        else:
             response_data['meta']['code'] = 209
             response_data['meta']['msg'] = '账号不存在'
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
-    else：
+    else:
         response_data['meta']['code'] = 212
         response_data['meta']['msg'] = '参数有误'
         return HttpResponse(json.dumps(response_data), 
