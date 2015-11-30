@@ -101,7 +101,7 @@ def login(request):
         response_data = {
             "meta":{
                 "code": 202,
-                "msg": '访问方式有误'
+                "msg": u'访问方式有误'
             },
             "data":""
         }
@@ -409,7 +409,12 @@ def userAddFund(request):
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
     else:
-        response_data['meta']['code'] = 212
-        response_data['meta']['msg'] = '参数有误'
+        response_data = {
+            "meta":{
+                "code":212,
+                "msg":'参数有误'
+            },
+            "data":""
+        }        
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
