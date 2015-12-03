@@ -12,6 +12,10 @@ from bs4 import BeautifulSoup
 import urllib2
 from django.views.decorators.csrf import csrf_exempt
 
+def getYesterday(date):
+    yesterday = date - datetime.timedelta(days=1)
+    return yesterday
+
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
@@ -76,7 +80,7 @@ def register(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
-
+@csrf_exempt
 def login(request):
     if 'phone' in request.POST and 'pwd' in request.POST:
         response_data = {
@@ -109,7 +113,7 @@ def login(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
-def getPassPort(phone):
+def phoneGetPassPort(phone):
     try:
         passPort = PassPort.objects.get(phone=phone)
         return passPort
@@ -200,9 +204,9 @@ def addFund(fundCode):
     except Exception, e:
         return False
 
-def getFundNet(fund,day):
+def getFundNet(fund,date):
     try:
-        fundNetExist = FundNet.objects.get(fund=fund,date=day)
+        fundNetExist = FundNet.objects.get(fund=fund,date=date)
         return fundNetExist
     except Exception, e:
         return False
@@ -290,29 +294,28 @@ def addOldProfit(passPort,fund,year,profitBefore):
         except Exception, e:
             return False
         
-
+@csrf_exempt
 def userAddFund(request):
     if 'phone' in request.POST and 'fundCode' in request.POST and 'share' in request.POST and 'profitBefore' in request.POST and 'types' in request.POST:
         phone = request.POST.get('phone') 
 
         response_data = {
             "meta":{
-                "code":0,
+                "code":201,
                 "msg":''
             },
             "data":""
         }
 
         #手机号存在
-        if getPassPort(phone):
-            passPort = getPassPort(phone)
+        if phoneGetPassPort(phone):
+            passPort = phoneGetPassPort(phone)
             
             fundCode = request.POST.get('fundCode')
             types = request.POST.get('types')
             if types in ['lowRisk','middleRisk','highRisk']:
                 pass
             else:
-                response_data['meta']['code'] = 211
                 response_data['meta']['msg'] = '风险类型有误'
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
@@ -320,7 +323,6 @@ def userAddFund(request):
                 share = float(request.POST.get('share'))
                 profitBefore = float(request.POST.get('profitBefore'))
             except Exception, e:
-                response_data['meta']['code'] = 210
                 response_data['meta']['msg'] = '收益或份额格式有误'
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
@@ -332,7 +334,6 @@ def userAddFund(request):
                 fund = getFund(fundCode)
                 # 份额已存在
                 if getShare(passPort,fund):
-                    response_data['meta']['code'] = 201
                     response_data['meta']['msg'] = '基金已收录，份额已存在，添加失败'
 
                     return HttpResponse(json.dumps(response_data), 
@@ -343,7 +344,6 @@ def userAddFund(request):
                         if addShare(passPort,fund,types,share):
                             pass
                         else:
-                            response_data['meta']['code'] = 202
                             response_data['meta']['msg'] = '基金已收录，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
                                 content_type='application/json')
@@ -355,13 +355,11 @@ def userAddFund(request):
                         else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
-                            response_data['meta']['code'] = 203
                             response_data['meta']['msg'] = '基金已收录，添加份额成功，添加今年收益失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')
                         
                     except Exception, e:
-                        response_data['meta']['code'] = 204
                         response_data['meta']['msg'] = '基金已收录，未知原因失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')                        
@@ -375,7 +373,6 @@ def userAddFund(request):
                         if addShare(passPort,fund,types,share):
                             pass
                         else:
-                            response_data['meta']['code'] = 205
                             response_data['meta']['msg'] = '收录基金成功，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
                                 content_type='application/json')
@@ -387,35 +384,63 @@ def userAddFund(request):
                         else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
-                            response_data['meta']['code'] = 206
                             response_data['meta']['msg'] = '收录基金成功，添加份额成功，添加今年收益失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')
                     except Exception, e:
-                        response_data['meta']['code'] = 207
                         response_data['meta']['msg'] = '收录基金成功，未知原因失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')  
                 #收录基金失败
                 else:
-                    response_data['meta']['code'] = 208
                     response_data['meta']['msg'] = '收录基金失败'
                     return HttpResponse(json.dumps(response_data), 
                         content_type='application/json')
 
         #手机号不存在
         else:
-            response_data['meta']['code'] = 209
             response_data['meta']['msg'] = '账号不存在'
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
     else:
         response_data = {
             "meta":{
-                "code":212,
+                "code":201,
                 "msg":'参数有误'
             },
             "data":""
         }        
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
+
+
+def updateUserFundProfit(passPort,date,fund):
+    try:
+        userFundProfitExist = UserFundProfit.objects.get(passPort=passPort,date=date,fund=fund)
+        return False
+    except Exception, e:
+        
+        yesterday = getYesterday(date)
+
+        todayFNet = getFundNet(fund,date)
+        yesterdayFNet = getFundNet(fund,yesterday)
+
+        if todayFNet and yesterdayFNet:
+            userFundShare = UserFundShare(passPort=passPort,fund=fund)
+            share = userFundShare.share
+            profit = (todayFNet.net - yesterdayFNet.net) * share
+            totalAmount = todayFNet.net * share
+
+            newUserFundProfit = UserFundProfit(
+                passPort = passPort,
+                fund = fund,
+                date = date,
+                profit = float("%.2f" % profit),
+                totalAmount = float("%.2f" % totalAmount)
+                )
+            newUserFundProfit.save()
+            return True
+        else:
+            return False
+
+
