@@ -214,12 +214,13 @@ def getFundNet(fund,date):
 def updateFundNet(fundCode):
     fund = getFund(fundCode)
     fundNet = webGetFundNet(fundCode)
+
     if fund and fundNet:
         n = 0
         for netInfo in fundNet:
-            year = netInfo.split('-')[0]
-            month = netInfo.split('-')[1]
-            day = netInfo.split('-')[2]
+            year = int(netInfo.split('-')[0])
+            month = int(netInfo.split('-')[1])
+            day = int(netInfo.split('-')[2])
             thatDay = datetime.date(year,month,day)
             if getFundNet(fund,thatDay):
                 pass
@@ -227,8 +228,8 @@ def updateFundNet(fundCode):
                 newFundNet = FundNet(
                     fund = fund,
                     date = thatDay,
-                    net = fundNet(netInfo).split(',')[0],
-                    yields = fundNet(netInfo).split(',')[1]
+                    net = fundNet[netInfo].split(',')[0],
+                    yields = fundNet[netInfo].split(',')[1]
                 )
                 newFundNet.save()
                 n += 1
