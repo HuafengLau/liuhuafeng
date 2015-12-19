@@ -621,8 +621,8 @@ def getRiskTypeInfo(phone,types):
         else:
             return 'no fundShare'
 
-    except Exception, e:
-        return 'something wrong'
+    #except Exception, e:
+        #return 'something wrong'
 
 #首页获取高风险资产信息
 @csrf_exempt
