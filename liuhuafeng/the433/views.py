@@ -760,8 +760,8 @@ def HPgetMainInfo(request):
             dayString = latestProfit.date.isoformat()
         #未获取到，可能是新用户
         except Exception, e:
-            profit = 'null'
-            dayString = 'null'
+            profit = ''
+            dayString = ''
         
         response_data['meta']['code'] = 200
         response_data['meta']['msg'] = u'获取成功'
