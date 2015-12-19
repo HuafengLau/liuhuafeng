@@ -17,6 +17,7 @@ def dayUpdateFundNet():
 		for fund in allFund:
 			try:
 				netExist = FundNet.objects.get(fund=fund,date=today)
+				pass
 			except Exception, e:
 				result = updateFundNet(fund.code)
 				if 'today' in result:

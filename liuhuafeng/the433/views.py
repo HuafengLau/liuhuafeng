@@ -217,9 +217,10 @@ def updateFundNet(fundCode):
             month = int(netInfo.split('-')[1])
             day = int(netInfo.split('-')[2])
             thatDay = datetime.date(year,month,day)
-            if getFundNet(fund,thatDay):
+            try:
+                fundNetExist = FundNet.objects.get(fund=fund,date=thatDay)
                 pass
-            else:               
+            except Exception, e:               
                 newFundNet = FundNet(
                     fund = fund,
                     date = thatDay,
