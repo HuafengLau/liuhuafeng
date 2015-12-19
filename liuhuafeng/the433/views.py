@@ -570,8 +570,8 @@ def getRiskTypeInfo(phone,types):
                 fund = fundShare.fund
 
                 #收集基金名字和代码
-                temp['name'] = fund.name
-                temp['code'] = fund.code
+                temp['name'] = str(fund.name)
+                temp['code'] = str(fund.code)
 
                 #获取最新的FundNet
                 latestFundNet = FundNet.objects.filter(fund=fund).latest('date')
@@ -581,8 +581,8 @@ def getRiskTypeInfo(phone,types):
                 totalProfit = getFundTotalProfit(passPort,fund)
 
                 #收集基金总资金和总收益
-                temp['totalAmount'] = totalAmount
-                temp['totalProfit'] = totalProfit
+                temp['totalAmount'] = str(totalAmount)
+                temp['totalProfit'] = str(totalProfit)
 
                 #如果有用户基金收益记录
                 try:
@@ -592,9 +592,11 @@ def getRiskTypeInfo(phone,types):
                     dayString = latestFundProfit.date.isoformat()
 
                     #收集基金最新收益、最新收益率、最新日期
-                    temp['latestProfit'] = latestProfit
-                    temp['latestYields'] = latestYields
-                    temp['dayString'] = dayString
+                    temp['latestProfit'] = str(latestProfit)
+                    temp['latestYields'] = str(latestYields)
+                    temp['dayString'] = str(dayString)
+                    temp['net'] = str(net)
+                    temp['share'] = str(fundShare.share)
 
                 #没有基金收益记录，可能是新添加的基金
                 except Exception, e:
@@ -603,9 +605,11 @@ def getRiskTypeInfo(phone,types):
                     temp['latestProfit'] = ''
                     temp['latestYields'] = ''
                     temp['dayString'] = ''
+                    temp['net'] = ''
+                    temp['share'] = ''
                 
                 #收集基金分类
-                temp['types'] = fund.types                   
+                temp['types'] = str(fund.types)                   
 
                 result.append(temp)
 
@@ -767,10 +771,10 @@ def HPgetMainInfo(request):
         response_data['meta']['msg'] = u'获取成功'
         
         response_data['data'] = {
-            'totalProperty':totalProperty,
-            'totalProfit':totalProfit,
-            'profit':profit,
-            'dayString':dayString
+            'totalProperty':str(totalProperty),
+            'totalProfit':str(totalProfit),
+            'profit':str(profit),
+            'dayString':str(dayString)
             }
 
         return HttpResponse(json.dumps(response_data), 
