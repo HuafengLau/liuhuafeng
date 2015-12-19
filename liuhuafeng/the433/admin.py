@@ -1,3 +1,5 @@
+#coding:utf-8
+
 from django.contrib import admin
 
 # Register your models here.
@@ -13,9 +15,9 @@ admin.site.register(PassPort, PassPortAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
     """docstring for ProfileAdmin"""
-    list_display = ('passPort','lastActive')
+    list_display = ('passPort','registerTime')
     list_filter = ('passPort',)
-    ordering = ('passPort','lastActive')
+    ordering = ('passPort','registerTime')
 
 admin.site.register(Profile, ProfileAdmin)
 
@@ -46,7 +48,7 @@ admin.site.register(UserFundShare, UserFundShareAdmin)
 
 class UserFundProfitAdmin(admin.ModelAdmin):
     """docstring for UserFundProfitAdmin"""
-    list_display = ('passPort','fund','date','profit','totalAmount')
+    list_display = ('passPort','fund','date','profit','yields','totalAmount','todayNet','beforeDayNet','share')
     list_filter = ('passPort','date')
     ordering = ('passPort','fund','date')
 
@@ -59,3 +61,12 @@ class UserFundOldProfitAdmin(admin.ModelAdmin):
     ordering = ('passPort','fund','year')
 
 admin.site.register(UserFundOldProfit, UserFundOldProfitAdmin)
+
+class UserDayProfitAdmin(admin.ModelAdmin):
+    """docstring for UserDayProfitAdmin"""
+    list_display = ('passPort','date','profit','totalAmount','yields')
+    list_filter = ('passPort','date')
+    ordering = ('passPort','date','profit','totalAmount','yields')
+
+admin.site.register(UserDayProfit, UserDayProfitAdmin)
+
