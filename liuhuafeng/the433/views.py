@@ -560,69 +560,69 @@ def getRiskTypeInfo(phone,types):
         passPort = phoneGetPassPort(phone)
     except Exception, e:
         return 'passPort notfound'
-    #try:  
-    userFundShares = UserFundShare.objects.filter(passPort=passPort,types=types)
-    today = datetime.date.today()
-    
-    #如果用户份额FundShare存在
-    if userFundShares:
-        result = []
+    try:  
+        userFundShares = UserFundShare.objects.filter(passPort=passPort,types=types)
+        today = datetime.date.today()
+        
+        #如果用户份额FundShare存在
+        if userFundShares:
+            result = []
 
-        #对于每一个用户份额FundShare，收集基金的名字、代码、总资产、总收益、最新收益、最新收益率、最新收益时间
-        for fundShare in userFundShares:
-            temp = {}
-            fund = fundShare.fund
+            #对于每一个用户份额FundShare，收集基金的名字、代码、总资产、总收益、最新收益、最新收益率、最新收益时间
+            for fundShare in userFundShares:
+                temp = {}
+                fund = fundShare.fund
 
-            #收集基金名字和代码
-            temp['name'] = str(fund.name)
-            temp['code'] = str(fund.code)
+                #收集基金名字和代码
+                temp['name'] = '%s' % fund.name
+                temp['code'] = '%s' % fund.code
 
-            #获取最新的FundNet
-            latestFundNet = FundNet.objects.filter(fund=fund).latest('date')
-            net = latestFundNet.net
-            #yields = latestFundNet.yields
-            totalAmount = float("%.2f" % (net*fundShare.share))
-            totalProfit = getFundTotalProfit(passPort,fund)
+                #获取最新的FundNet
+                latestFundNet = FundNet.objects.filter(fund=fund).latest('date')
+                net = latestFundNet.net
+                #yields = latestFundNet.yields
+                totalAmount = float("%.2f" % (net*fundShare.share))
+                totalProfit = getFundTotalProfit(passPort,fund)
 
-            #收集基金总资金和总收益
-            temp['totalAmount'] = str(totalAmount)
-            temp['totalProfit'] = str(totalProfit)
+                #收集基金总资金和总收益
+                temp['totalAmount'] = '%s' % totalAmount
+                temp['totalProfit'] = '%s' % totalProfit
 
-            #如果有用户基金收益记录
-            try:
-                latestFundProfit = UserFundProfit.objects.filter(passPort=passPort,fund=fund).latest('date')
-                latestProfit = latestFundProfit.profit
-                latestYields = latestFundProfit.yields
-                dayString = latestFundProfit.date.isoformat()
+                #如果有用户基金收益记录
+                try:
+                    latestFundProfit = UserFundProfit.objects.filter(passPort=passPort,fund=fund).latest('date')
+                    latestProfit = latestFundProfit.profit
+                    latestYields = latestFundProfit.yields
+                    dayString = latestFundProfit.date.isoformat()
 
-                #收集基金最新收益、最新收益率、最新日期
-                temp['latestProfit'] = str(latestProfit)
-                temp['latestYields'] = str(latestYields)
-                temp['dayString'] = str(dayString)
-                temp['net'] = str(net)
-                temp['share'] = str(fundShare.share)
+                    #收集基金最新收益、最新收益率、最新日期
+                    temp['latestProfit'] = '%s' % latestProfit
+                    temp['latestYields'] = '%s' % latestYields
+                    temp['dayString'] = '%s' % dayString
+                    temp['net'] = '%s' % net
+                    temp['share'] = '%s' % fundShare.share
 
-            #没有基金收益记录，可能是新添加的基金
-            except Exception, e:
+                #没有基金收益记录，可能是新添加的基金
+                except Exception, e:
 
-                #收集基金最新收益、最新收益率、最新日期
-                temp['latestProfit'] = ''
-                temp['latestYields'] = ''
-                temp['dayString'] = ''
-                temp['net'] = ''
-                temp['share'] = ''
-            
-            #收集基金分类
-            temp['types'] = str(fund.types)                   
+                    #收集基金最新收益、最新收益率、最新日期
+                    temp['latestProfit'] = ''
+                    temp['latestYields'] = ''
+                    temp['dayString'] = ''
+                    temp['net'] = ''
+                    temp['share'] = ''
+                
+                #收集基金分类
+                temp['types'] = '%s' % fund.types                  
 
-            result.append(temp)
+                result.append(temp)
 
-        return result
-    else:
-        return 'no fundShare'
+            return result
+        else:
+            return 'no fundShare'
 
-    #except Exception, e:
-        #return 'something wrong'
+    except Exception, e:
+        return 'something wrong'
 
 #首页获取高风险资产信息
 @csrf_exempt
@@ -772,6 +772,11 @@ def HPgetMainInfo(request):
         middleRiskProperty = getUserRiskProperty(passPort,'middleRisk')
         lowRiskProperty = getUserRiskProperty(passPort,'lowRisk')
         totalProperty = highRiskProperty + middleRiskProperty + lowRiskProperty
+
+        highPercent = highRiskProperty / totalProperty
+        middlePercent = middleRiskProperty / totalProperty
+        lowPercent = lowRiskProperty / totalProperty
+
         totalProfit = getUserTotalProfit(passPort)
 
         #获取最新的日收益
@@ -787,12 +792,14 @@ def HPgetMainInfo(request):
         response_data['meta']['code'] = 200
         response_data['meta']['msg'] = u'获取成功'
         
-        response_data['data'] = {
-            'totalProperty':str(totalProperty),
-            'totalProfit':str(totalProfit),
-            'profit':str(profit),
-            'dayString':str(dayString)
-            }
+        response_data['data'] = {}
+        response_data['data']['totalProperty'] = '%s' % totalProperty
+        response_data['data']['totalProfit'] = '%s' % totalProfit
+        response_data['data']['profit'] = '%s' % profit
+        response_data['data']['dayString'] = '%s' % dayString
+        response_data['data']['highPercent'] = '%s' % highPercent
+        response_data['data']['middlePercent'] = '%s' % middlePercent
+        response_data['data']['lowPercent'] = '%s' % lowPercent
 
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
