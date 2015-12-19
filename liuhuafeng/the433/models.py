@@ -10,7 +10,7 @@ class PassPort(models.Model):
 	nicName = models.CharField(max_length=30,verbose_name=u'昵称')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.nicName, self.phone)
+		return u'%s,%s' % (self.nicName, self.phone)
 
 	class Meta:
 		ordering = ['phone',]
@@ -19,10 +19,10 @@ class PassPort(models.Model):
 
 class Profile(models.Model):
 	passPort = models.ForeignKey(PassPort,verbose_name=u'通行证')
-	lastActive = models.DateTimeField(auto_now=True,auto_now_add=True,verbose_name=u'最近活跃时间')
+	registerTime = models.DateTimeField(auto_now_add=True,verbose_name=u'注册时间')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.passPort)
+		return u'%s,%s' % (self.passPort)
 
 	class Meta:
 		ordering = ['passPort',]
@@ -40,7 +40,7 @@ class Fund(models.Model):
 	cxCode = models.CharField(max_length=7,default='',verbose_name=u'晨星地址')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.code, self.name)
+		return u'%s,%s' % (self.code, self.name)
 
 	class Meta:
 		ordering = ['code',]
@@ -55,12 +55,12 @@ class FundNet(models.Model):
 	yields = models.FloatField(verbose_name=u'收益率')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.fund, self.date)
+		return u'%s,%s' % (self.fund, self.date)
 
 	class Meta:
 		ordering = ['fund','date']
-		verbose_name = u'基金收益表'
-		verbose_name_plural = u'基金收益表'
+		verbose_name = u'基金净值表'
+		verbose_name_plural = u'基金净值表'
 
 class UserFundShare(models.Model):
 	passPort = models.ForeignKey(PassPort,verbose_name=u'通行证')
@@ -69,7 +69,7 @@ class UserFundShare(models.Model):
 	share = models.FloatField(verbose_name=u'份额')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.passPort, self.fund)
+		return u'%s,%s' % (self.passPort, self.fund)
 
 	class Meta:
 		ordering = ['fund',]
@@ -80,11 +80,15 @@ class UserFundProfit(models.Model):
 	passPort = models.ForeignKey(PassPort,verbose_name=u'通行证')
 	fund = models.ForeignKey(Fund,verbose_name=u'基金')
 	date = models.DateField(verbose_name=u'日期')
+	todayNet = models.FloatField(verbose_name=u'当日净值')
+	beforeDayNet = models.FloatField(verbose_name=u'前一日净值')
+	share = models.FloatField(verbose_name=u'份额')
+	yields = models.FloatField(verbose_name=u'当日收益率')
 	profit = models.FloatField(verbose_name=u'当日收益')
-	totalAmount = models.FloatField(verbose_name=u'当日总金额')
+	totalAmount = models.FloatField(verbose_name=u'前一日总金额')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.passPort, self.date)
+		return u'%s,%s' % (self.passPort, self.date)
 
 	class Meta:
 		ordering = ['passPort','date']
@@ -98,12 +102,27 @@ class UserFundOldProfit(models.Model):
 	profit = models.FloatField(verbose_name=u'今年历史收益')
 
 	def __unicode__(self):
-		return '%s,%s' % (self.passPort, self.fund)
+		return u'%s,%s' % (self.passPort, self.fund)
 
 	class Meta:
 		ordering = ['passPort','fund','year']
 		verbose_name = u'用户基金历史收益表'
 		verbose_name_plural = u'用户基金历史收益表'
 
+class UserDayProfit(models.Model):
+	"""docstring for UserDayProfit"""
+	passPort = models.ForeignKey(PassPort,verbose_name=u'通行证')
+	date = models.DateField(verbose_name=u'日期')
+	profit = models.FloatField(verbose_name=u'当日总收益')
+	totalAmount = models.FloatField(verbose_name=u'前一日总金额')
+	yields = models.FloatField(verbose_name=u'当日总收益率')
+
+	def __unicode__(self):
+		return u'%s,%s' % (self.passPort, self.date)
+
+	class Meta:
+		ordering = ['passPort','date']
+		verbose_name = u'用户每日收益表'
+		verbose_name_plural = u'用户每日收益表'
 
 
