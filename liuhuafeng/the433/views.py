@@ -193,9 +193,9 @@ def addFund(fundCode):
             newFund.save()
             return True
         else:
-            return False
+            return 'wrong, %s fundInfo is null' % fundCode
     except Exception, e:
-        return False
+        return 'something wrong code %s ' % fundCode
 
 #获取某日基金净值，存在则返回FundNet，否则返回False
 def getFundNet(fund,date):
@@ -317,14 +317,14 @@ def userAddFund(request):
             if types in ['lowRisk','middleRisk','highRisk']:
                 pass
             else:
-                response_data['meta']['msg'] = '风险类型有误'
+                response_data['meta']['msg'] = u'风险类型有误'
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
             try:
                 share = float(request.POST.get('share'))
                 profitBefore = float(request.POST.get('profitBefore'))
             except Exception, e:
-                response_data['meta']['msg'] = '收益或份额格式有误'
+                response_data['meta']['msg'] = u'收益或份额格式有误'
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
             
@@ -335,7 +335,7 @@ def userAddFund(request):
                 fund = getFund(fundCode)
                 # 份额已存在
                 if getShare(passPort,fund):
-                    response_data['meta']['msg'] = '基金已收录，份额已存在，添加失败'
+                    response_data['meta']['msg'] = u'基金已收录，份额已存在，添加失败'
 
                     return HttpResponse(json.dumps(response_data), 
                         content_type='application/json')
@@ -345,62 +345,63 @@ def userAddFund(request):
                         if addShare(passPort,fund,types,share):
                             pass
                         else:
-                            response_data['meta']['msg'] = '基金已收录，添加份额失败'
+                            response_data['meta']['msg'] = u'基金已收录，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
                                 content_type='application/json')
 
                         if addOldProfit(passPort,fund,year,profitBefore):
                             response_data['meta']['code'] = 200
-                            response_data['meta']['msg'] = '基金已收录，添加成功'
+                            response_data['meta']['msg'] = u'基金已收录，添加成功'
                             updateFundNet(fundCode)
                         else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
-                            response_data['meta']['msg'] = '基金已收录，添加份额成功，添加今年收益失败'
+                            response_data['meta']['msg'] = u'基金已收录，添加份额成功，添加今年收益失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')
                         
                     except Exception, e:
-                        response_data['meta']['msg'] = '基金已收录，未知原因失败'
+                        response_data['meta']['msg'] = u'基金已收录，未知原因失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')                        
                 
             #基金未收录
             else:             
                 #收录基金成功
-                if addFund(fundCode): 
+                result = addFund(fundCode)
+                if not 'wrong' in result: 
                     fund = getFund(fundCode)
                     try:
                         if addShare(passPort,fund,types,share):
                             pass
                         else:
-                            response_data['meta']['msg'] = '收录基金成功，添加份额失败'
+                            response_data['meta']['msg'] = u'收录基金成功，添加份额失败'
                             return HttpResponse(json.dumps(response_data), 
                                 content_type='application/json')
 
                         if addOldProfit(passPort,fund,year,profitBefore):                   
                             response_data['meta']['code'] = 200
-                            response_data['meta']['msg'] = '收录基金成功，添加成功'
+                            response_data['meta']['msg'] = u'收录基金成功，添加成功'
                             updateFundNet(fundCode)
                         else:
                             justAdd = getShare(passPort,fund)
                             justAdd.delete()
-                            response_data['meta']['msg'] = '收录基金成功，添加份额成功，添加今年收益失败'
+                            response_data['meta']['msg'] = u'收录基金成功，添加份额成功，添加今年收益失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')
                     except Exception, e:
-                        response_data['meta']['msg'] = '收录基金成功，未知原因失败'
+                        response_data['meta']['msg'] = u'收录基金成功，未知原因失败'
                         return HttpResponse(json.dumps(response_data), 
                             content_type='application/json')  
                 #收录基金失败
                 else:
-                    response_data['meta']['msg'] = '收录基金失败'
+                    response_data['meta']['msg'] = u'收录基金失败 %s' % result
                     return HttpResponse(json.dumps(response_data), 
                         content_type='application/json')
 
         #手机号不存在
         else:
-            response_data['meta']['msg'] = '账号不存在'
+            response_data['meta']['msg'] = u'账号不存在'
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
     else:
@@ -735,8 +736,18 @@ def HPgetLowRisk(request):
             content_type='application/json')
 
 #获取用户的总资产
-def getUserTotalProperty(passPort):
-    pass
+def getUserRiskProperty(passPort,types):
+    fundShares = UserFundShare.objects.filter(passPort=passPort,types=types,share__gt=0.0)
+    if fundShares:
+        total = 0.0
+        for fundShare in fundShares:
+            share = fundShare.share
+            latestFundNet = FundNet.objects.filter(fund=fundShare.fund).latest('date')
+            total += share * latestFundNet.net
+        return total
+
+    else:
+        return 0.0
 
 #获取用户的累计收益
 def getUserTotalProfit(passPort):
@@ -757,7 +768,10 @@ def HPgetMainInfo(request):
         phone = request.POST.get('phone')
         passPort = phoneGetPassPort(phone)
 
-        totalProperty = getUserTotalProperty(passPort)
+        highRiskProperty = getUserRiskProperty(passPort,'highRisk')
+        middleRiskProperty = getUserRiskProperty(passPort,'middleRisk')
+        lowRiskProperty = getUserRiskProperty(passPort,'lowRisk')
+        totalProperty = highRiskProperty + middleRiskProperty + lowRiskProperty
         totalProfit = getUserTotalProfit(passPort)
 
         #获取最新的日收益
