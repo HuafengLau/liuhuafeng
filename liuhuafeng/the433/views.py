@@ -615,10 +615,10 @@ def getRiskTypeInfo(phone,types):
 
             return result
         else:
-            return False
+            return 'no fundShare'
 
     except Exception, e:
-        return False
+        return 'wrong about passPort'
 
 #首页获取高风险资产信息
 @csrf_exempt
