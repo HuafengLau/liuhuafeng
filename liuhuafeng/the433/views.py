@@ -557,6 +557,9 @@ def tempAddInfo(temp,fundNet,fund,date,fundShare):
 def getRiskTypeInfo(phone,types):
     try:
         passPort = phoneGetPassPort(phone)
+    except Exception, e:
+        return 'passPort notfound'
+    try:  
         userFundShares =  UserFundShare.objects.filter(passPort=passPort,types=types)
         today = datetime.date.today()
         
@@ -618,7 +621,7 @@ def getRiskTypeInfo(phone,types):
             return 'no fundShare'
 
     except Exception, e:
-        return 'wrong about passPort'
+        return 'something wrong'
 
 #首页获取高风险资产信息
 @csrf_exempt
