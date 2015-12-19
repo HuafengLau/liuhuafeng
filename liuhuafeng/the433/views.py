@@ -566,12 +566,12 @@ def getRiskTypeInfo(phone,types):
 
             #对于每一个用户份额FundShare，收集基金的名字、代码、总资产、总收益、最新收益、最新收益率、最新收益时间
             for fundShare in userFundShares:
-                temp = []
+                temp = {}
                 fund = fundShare.fund
 
                 #收集基金名字和代码
-                temp.append(fund.name)
-                temp.append(fund.code)
+                temp['name'] = fund.name
+                temp['code'] = fund.code
 
                 #获取最新的FundNet
                 latestFundNet = FundNet.objects.filter(fund=fund).latest('date')
@@ -581,8 +581,8 @@ def getRiskTypeInfo(phone,types):
                 totalProfit = getFundTotalProfit(passPort,fund)
 
                 #收集基金总资金和总收益
-                temp.append(totalAmount)
-                temp.append(totalProfit)
+                temp['totalAmount'] = totalAmount
+                temp['totalProfit'] = totalProfit
 
                 #如果有用户基金收益记录
                 try:
@@ -592,20 +592,20 @@ def getRiskTypeInfo(phone,types):
                     dayString = latestFundProfit.date.isoformat()
 
                     #收集基金最新收益、最新收益率、最新日期
-                    temp.append(latestProfit)
-                    temp.append(latestYields)
-                    temp.append(dayString)
+                    temp['latestProfit'] = latestProfit
+                    temp['latestYields'] = latestYields
+                    temp['dayString'] = dayString
 
                 #没有基金收益记录，可能是新添加的基金
                 except Exception, e:
 
                     #收集基金最新收益、最新收益率、最新日期
-                    temp.append('null')
-                    temp.append('null')
-                    temp.append('null')
+                    temp['latestProfit'] = ''
+                    temp['latestYields'] = ''
+                    temp['dayString'] = ''
                 
-                #收集用户基金分类
-                temp.append(fund.types)                   
+                #收集基金分类
+                temp['types'] = fund.types                   
 
                 result.append(temp)
 
@@ -765,7 +765,13 @@ def HPgetMainInfo(request):
         
         response_data['meta']['code'] = 200
         response_data['meta']['msg'] = u'获取成功'
-        response_data['data'] = [totalProperty,totalProfit,profit,dayString]
+        
+        response_data['data'] = {
+            'totalProperty':totalProperty,
+            'totalProfit':totalProfit,
+            'profit':profit,
+            'dayString':dayString
+            }
 
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
