@@ -22,7 +22,7 @@ class Profile(models.Model):
 	registerTime = models.DateTimeField(auto_now_add=True,verbose_name=u'注册时间')
 
 	def __unicode__(self):
-		return u'%s,%s' % (self.passPort)
+		return u'%s,%s' % (self.passPort,self.registerTime)
 
 	class Meta:
 		ordering = ['passPort',]
