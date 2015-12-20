@@ -124,22 +124,22 @@ def phoneGetPassPort(phone):
 
 #抓取基金信息，成功则返回字典，失败则返回False
 def webGetFundInfo(fundCode):
-    #try:
-    html = 'http://fund.eastmoney.com/%s.html' % fundCode
+    try:
+        html = 'http://fund.eastmoney.com/%s.html' % fundCode
 
-    web = urllib2.urlopen(html)
-    content = web.read()
-    soup = BeautifulSoup(content,'html.parser')
-    fundName = soup.title.string.split('(')[0]
-    types = soup.find('div',class_='rightbottom').contents[0].find_all('td')[1].find('a').contents[0]
-    fundInfo = {}
+        web = urllib2.urlopen(html)
+        content = web.read()
+        soup = BeautifulSoup(content,'html.parser')
+        fundName = soup.title.string.split('(')[0]
+        types = soup.find('div',class_='rightbottom').contents[0].find_all('td')[1].find('a').contents[0]
+        fundInfo = {}
 
-    fundInfo['fundName'] = fundName
-    fundInfo['types'] = types
+        fundInfo['fundName'] = fundName
+        fundInfo['types'] = types
 
-    return fundInfo
-    #except Exception, e:
-        #return False
+        return fundInfo
+    except Exception, e:
+        return False
 
 #抓取基金净值，成功则返回字典，失败则返回False
 def webGetFundNet(fundCode):
@@ -178,24 +178,24 @@ def getThisYear():
     return today.year
 
 def addFund(fundCode):
-    #try:
-    fundInfo = webGetFundInfo(fundCode)
-    if fundInfo:
-        newFund = Fund(
-            code = fundCode,
-            name = fundInfo['fundName'],
-            types = fundInfo['types'],
+    try:
+        fundInfo = webGetFundInfo(fundCode)
+        if fundInfo:
+            newFund = Fund(
+                code = fundCode,
+                name = fundInfo['fundName'],
+                types = fundInfo['types'],
 
-            cx3years = -1,
-            cx5years = -1,   
-            cxCode = ''
-        )        
-        newFund.save()
-        return True
-    else:
-        return 'wrong, %s fundInfo is %s' % (fundCode,fundInfo)
-    #except Exception, e:
-    #    return 'something wrong code %s ' % fundCode
+                cx3years = -1,
+                cx5years = -1,   
+                cxCode = ''
+            )        
+            newFund.save()
+            return True
+        else:
+            return 'wrong, %s fundInfo is %s' % (fundCode,fundInfo)
+    except Exception, e:
+        return 'something wrong code %s ' % fundCode
 
 #获取某日基金净值，存在则返回FundNet，否则返回False
 def getFundNet(fund,date):
