@@ -124,22 +124,22 @@ def phoneGetPassPort(phone):
 
 #抓取基金信息，成功则返回字典，失败则返回False
 def webGetFundInfo(fundCode):
-    try:
-        html = 'http://fund.eastmoney.com/%s.html' % fundCode
+    #try:
+    html = 'http://fund.eastmoney.com/%s.html' % fundCode
 
-        web = urllib2.urlopen(html)
-        content = web.read()
-        soup = BeautifulSoup(content,'html.parser')
-        fundName = soup.title.string.split('(')[0]
-        types = soup.find('div',class_='rightbottom').contents[0].find_all('td')[1].find('a').contents[0]
-        fundInfo = {}
+    web = urllib2.urlopen(html)
+    content = web.read()
+    soup = BeautifulSoup(content,'html.parser')
+    fundName = soup.title.string.split('(')[0]
+    types = soup.find('div',class_='rightbottom').contents[0].find_all('td')[1].find('a').contents[0]
+    fundInfo = {}
 
-        fundInfo['fundName'] = fundName
-        fundInfo['types'] = types
+    fundInfo['fundName'] = fundName
+    fundInfo['types'] = types
 
-        return fundInfo
-    except Exception, e:
-        return False
+    return fundInfo
+    #except Exception, e:
+        #return False
 
 #抓取基金净值，成功则返回字典，失败则返回False
 def webGetFundNet(fundCode):
@@ -751,7 +751,19 @@ def getUserRiskProperty(passPort,types):
 
 #获取用户的累计收益
 def getUserTotalProfit(passPort):
-    pass
+    dayProfits = UserDayProfit.objects.filter(passPort=passPort)
+    oldProfits = UserFundOldProfit.objects.filter(passPort=passPort)
+
+    totalProfit = 0.0
+
+    if dayProfits:
+        for dayProfit in dayProfits:
+            totalProfit += dayProfit.profit
+    if oldProfits:
+        for oldProfit in oldProfits:
+            totalProfit += oldProfit.profit
+
+    return totalProfit
 
 #获取首页主信息，包括昨日收益、总资产、累计收益
 @csrf_exempt
@@ -815,6 +827,66 @@ def HPgetMainInfo(request):
         }
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
+
+@csrf_exempt
+def editShare(request):
+    response_data = {
+        "meta":{
+            "code":0,
+            "msg":''
+        },
+        "data":""
+    }
+    if 'phone' in request.POST and 'share' in request.POST and 'fundCode' in request.POST:      
+        phone = request.POST.get('phone')
+        try:
+            share = float(request.POST.get('share'))
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'wrong share'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+        
+        fundCode = request.POST.get('fundCode')
+
+        #检查手机号是否存在
+        try:       
+            passPort = phoneGetPassPort(phone)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'passPort not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        #检查基金代码是否存在
+        fund = getFund(fundCode)
+        if not fund:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'wrong fundCodea'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+        
+        try:
+            fundShare = UserFundShare.objects.get(passPort=passPort,fund=fund)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'fundShare not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        fundShare.share = share
+        fundShare.save()
+        response_data['meta']['code'] = 200
+        response_data['meta']['msg'] = 'success'
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
+
+    else:
+        response_data['meta']['code'] = 201
+        response_data['meta']['msg'] = 'PRM error'
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
+
 
 def test(request):
     today = datetime.date.today()
