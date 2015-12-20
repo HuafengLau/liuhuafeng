@@ -178,24 +178,24 @@ def getThisYear():
     return today.year
 
 def addFund(fundCode):
-    try:
-        fundInfo = webGetFundInfo(fundCode)
-        if fundInfo:
-            newFund = Fund(
-                code = fundCode,
-                name = fundInfo['fundName'],
-                types = fundInfo['types'],
+    #try:
+    fundInfo = webGetFundInfo(fundCode)
+    if fundInfo:
+        newFund = Fund(
+            code = fundCode,
+            name = fundInfo['fundName'],
+            types = fundInfo['types'],
 
-                cx3years = -1,
-                cx5years = -1,   
-                cxCode = ''
-            )        
-            newFund.save()
-            return True
-        else:
-            return 'wrong, %s fundInfo is null' % fundCode
-    except Exception, e:
-        return 'something wrong code %s ' % fundCode
+            cx3years = -1,
+            cx5years = -1,   
+            cxCode = ''
+        )        
+        newFund.save()
+        return True
+    else:
+        return 'wrong, %s fundInfo is %s' % (fundCode,fundInfo)
+    #except Exception, e:
+    #    return 'something wrong code %s ' % fundCode
 
 #获取某日基金净值，存在则返回FundNet，否则返回False
 def getFundNet(fund,date):
@@ -889,8 +889,6 @@ def editShare(request):
 
 
 def test(request):
-    today = datetime.date.today()
-    allUserFundShare = UserFundShare.objects.filter(share__gt=0.0)
     response_data = {
         "meta":{
             "code":000,
@@ -898,14 +896,14 @@ def test(request):
         },
         "data":""
     }
-    if allUserFundShare:
-        for userFundShare in allUserFundShare:
-            print u'现在计算用户%s的%s基金' % (userFundShare.passPort.phone,userFundShare.fund.name)
-
-            result = updateUserFundProfit(userFundShare.passPort, today, userFundShare.fund)
-
-            print result
-        return HttpResponse(json.dumps(response_data), 
-            content_type='application/json')
+    fundInfo = webGetFundInfo('000688')
+    name = fundInfo['fundName']
+    types = fundInfo['types']
+    if fundInfo:     
+        response_data['fundName'] = name
+        response_data['types'] = types
     else:
-        pass
+        response_data['msg'] = 'null'
+    return HttpResponse(json.dumps(response_data), 
+        content_type='application/json')
+
