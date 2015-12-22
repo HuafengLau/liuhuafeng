@@ -43,6 +43,19 @@ def dayUpdateUserFundProfit():
 	else:
 		pass
 
+
+#更新每个用户每天的收益
+@shared_task
+def dayUpdateUserProfit():
+	allUser = PassPort.objects.all()
+	today = datetime.date.today()
+	if allUser:
+		for passPort in allUser:
+			updateUserProfit(passPort,today)
+	else:
+		pass
+
+
 #更新每个用户每个基金的昨日收益
 @shared_task
 def yesterdayUpdateUserFundProfit():
@@ -54,14 +67,13 @@ def yesterdayUpdateUserFundProfit():
 	else:
 		pass
 
-
-#更新每个用户每天的收益
+#更新每个用户昨天的收益
 @shared_task
-def dayUpdateUserProfit():
+def yesterdayUpdateUserProfit():
 	allUser = PassPort.objects.all()
-	today = datetime.date.today()
+	yesterday = datetime.date.today() - datetime.timedelta(days=1)
 	if allUser:
 		for passPort in allUser:
-			updateUserProfit(passPort,today)
+			updateUserProfit(passPort,yesterday)
 	else:
 		pass

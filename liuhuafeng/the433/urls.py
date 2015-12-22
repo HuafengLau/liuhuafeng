@@ -10,5 +10,6 @@ urlpatterns = patterns('the433.views',
     url(r'^homepage/getlowrisk/$', 'HPgetLowRisk', name='HPgetLowRisk'),
     url(r'^homepage/maininfo/$', 'HPgetMainInfo', name='HPgetMainInfo'),
     url(r'^funddetali/editshare/$', 'editShare', name='editShare'),
+    url(r'^passport/editnicname/$', 'editNicName', name='editNicName'),
     url(r'^test/$', 'test', name='test'),
 )

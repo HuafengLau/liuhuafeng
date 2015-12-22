@@ -815,8 +815,7 @@ def HPgetMainInfo(request):
 
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
-
-        
+  
     else:
         response_data = {
             "meta":{
@@ -887,6 +886,48 @@ def editShare(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
+@csrf_exempt
+def editShare(request):
+    response_data = {
+        "meta":{
+            "code":0,
+            "msg":''
+        },
+        "data":""
+    }
+    if 'phone' in request.POST and 'nicName' in request.POST:      
+        phone = request.POST.get('phone')
+        nicName = request.POST.get('nicName')
+
+        #检查手机号是否存在
+        try:       
+            passPort = phoneGetPassPort(phone)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'passPort not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        try:
+            profile = Profile.objects.get(passPort=passPort)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'profile not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        profile.nicName = nicName
+        profile.save()
+        response_data['meta']['code'] = 200
+        response_data['meta']['msg'] = 'success'
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
+
+    else:
+        response_data['meta']['code'] = 201
+        response_data['meta']['msg'] = 'PRM error'
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
 
 def test(request):
     response_data = {
