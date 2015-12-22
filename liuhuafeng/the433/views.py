@@ -887,7 +887,7 @@ def editShare(request):
             content_type='application/json')
 
 @csrf_exempt
-def editShare(request):
+def editNicName(request):
     response_data = {
         "meta":{
             "code":0,
