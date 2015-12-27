@@ -39,7 +39,7 @@ def dayUpdateFundNet():
 						pass
 				else:
 					pass
-				if result：
+				if result:
 					if result.split(',')[0] != '0':
 						m += 1
 
