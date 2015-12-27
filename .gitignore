@@ -5,6 +5,8 @@ whoosh_index/
 settings.py
 settings_production.py
 
+supervisord.conf
+
 .sqlite3
 db.sqlite3
 

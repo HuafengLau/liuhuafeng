@@ -231,9 +231,9 @@ def updateFundNet(fundCode):
                 n += 1
         today = datetime.date.today()
         if today.isoformat() in fundNet:
-            return '%sdays,today' % n
+            return '%s,today' % n
         else:
-            return '%sdays,noToday' % n
+            return '%s,noToday' % n
     else:
         return False
 
