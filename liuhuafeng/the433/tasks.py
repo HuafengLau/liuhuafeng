@@ -47,7 +47,7 @@ def dayUpdateFundNet():
 		response_data['realUpdate'] = m
 		response_data['todayUpdate'] = k
 		#return json.dumps(response_data)
-		return '222'
+		return response_data
 	else:
 		return 'wrong'
 
