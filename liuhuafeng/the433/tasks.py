@@ -29,10 +29,10 @@ def dayUpdateFundNet():
 				netExist = FundNet.objects.get(fund=fund,date=today)
 				pass
 			except Exception, e:
-				n += 1
+				tryUpdate += 1
 				result = updateFundNet(fund.code)
 				if 'today' in result:
-					k += 1
+					todayUpdate += 1
 					targetFundShre = UserFundShare.objects.filter(fund=fund,share__gt=0.0)
 					if targetFundShre:
 						for userFundShare in targetFundShre:
@@ -43,7 +43,7 @@ def dayUpdateFundNet():
 					pass
 				if result:
 					if result.split(',')[0] != '0':
-						m += 1
+						hasUpdate += 1
 
 		response_data['tryUpdate'] = tryUpdate
 		response_data['hasUpdate'] = hasUpdate
@@ -63,7 +63,7 @@ def dayUpdateUserFundProfit():
 	#成功更新的用户基金个数
 	hasUpdate = 0
 	response_data = {}
-	
+
 	if allUserFundShare:
 		for userFundShare in allUserFundShare:
 			tryUpdate += 1
