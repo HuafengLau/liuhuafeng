@@ -14,13 +14,15 @@ import json
 def dayUpdateFundNet():
 	allFund = Fund.objects.all()
 	today = datetime.date.today()
+
 	response_data = {}
 	#实际尝试更新的基金数
-	n = 0
+	tryUpdate = 0
 	#真正有更新的基金数
-	m = 0
+	hasUpdate = 0
 	#今日净值有更新的基金数
-	k = 0
+	todayUpdate = 0
+
 	if allFund:
 		for fund in allFund:
 			try:
@@ -43,10 +45,9 @@ def dayUpdateFundNet():
 					if result.split(',')[0] != '0':
 						m += 1
 
-		response_data['tryUpdate'] = n
-		response_data['realUpdate'] = m
-		response_data['todayUpdate'] = k
-		#return json.dumps(response_data)
+		response_data['tryUpdate'] = tryUpdate
+		response_data['hasUpdate'] = hasUpdate
+		response_data['todayUpdate'] = todayUpdate
 		return response_data
 	else:
 		return 'wrong'
@@ -56,9 +57,21 @@ def dayUpdateFundNet():
 def dayUpdateUserFundProfit():
 	today = datetime.date.today()
 	allUserFundShare = UserFundShare.objects.filter(share__gt=0.0)
+
+	#尝试更新的用户基金个数
+	tryUpdate = 0
+	#成功更新的用户基金个数
+	hasUpdate = 0
+	response_data = {}
+	
 	if allUserFundShare:
 		for userFundShare in allUserFundShare:
-			updateUserFundProfit(userFundShare.passPort, today, userFundShare.fund)
+			tryUpdate += 1
+			if updateUserFundProfit(userFundShare.passPort, today, userFundShare.fund):
+				hasUpdate += 1
+		response_data['tryUpdate'] = tryUpdate
+		response_data['hasUpdate'] = hasUpdate
+		return response_data
 	else:
 		pass
 
@@ -68,9 +81,21 @@ def dayUpdateUserFundProfit():
 def dayUpdateUserProfit():
 	allUser = PassPort.objects.all()
 	today = datetime.date.today()
+
+	#尝试更新的用户基金个数
+	tryUpdate = 0
+	#成功更新的用户基金个数
+	hasUpdate = 0
+	response_data = {}
+
 	if allUser:
 		for passPort in allUser:
-			updateUserProfit(passPort,today)
+			tryUpdate += 1
+			if updateUserProfit(passPort,today):
+				hasUpdate += 1
+		response_data['tryUpdate'] = tryUpdate
+		response_data['hasUpdate'] = hasUpdate
+		return response_data
 	else:
 		pass
 
@@ -80,9 +105,23 @@ def dayUpdateUserProfit():
 def yesterdayUpdateUserFundProfit():
 	yesterday = datetime.date.today() - datetime.timedelta(days=1)
 	allUserFundShare = UserFundShare.objects.filter(share__gt=0.0)
+
+	#尝试更新的用户基金个数
+	tryUpdate = 0
+	#成功更新的用户基金个数
+	hasUpdate = 0
+	response_data = {}
+
 	if allUserFundShare:
 		for userFundShare in allUserFundShare:
-			updateUserFundProfit(userFundShare.passPort, yesterday, userFundShare.fund)
+			tryUpdate += 1
+			if updateUserFundProfit(userFundShare.passPort, yesterday, userFundShare.fund):
+				hasUpdate += 1
+
+		response_data['tryUpdate'] = tryUpdate
+		response_data['hasUpdate'] = hasUpdate
+		return response_data
+
 	else:
 		pass
 
@@ -91,9 +130,21 @@ def yesterdayUpdateUserFundProfit():
 def yesterdayUpdateUserProfit():
 	allUser = PassPort.objects.all()
 	yesterday = datetime.date.today() - datetime.timedelta(days=1)
+	
+	#尝试更新的用户基金个数
+	tryUpdate = 0
+	#成功更新的用户基金个数
+	hasUpdate = 0
+	response_data = {}
+
 	if allUser:
 		for passPort in allUser:
-			updateUserProfit(passPort,yesterday)
+			tryUpdate += 1
+			if updateUserProfit(passPort,yesterday):
+				hasUpdate += 1
+		response_data['tryUpdate'] = tryUpdate
+		response_data['hasUpdate'] = hasUpdate
+		return response_data
 	else:
 		pass
 
