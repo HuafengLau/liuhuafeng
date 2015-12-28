@@ -96,3 +96,8 @@ def yesterdayUpdateUserProfit():
 			updateUserProfit(passPort,yesterday)
 	else:
 		pass
+
+#用来测试
+@shared_task
+def doNothing():
+	pass
