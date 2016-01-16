@@ -795,9 +795,15 @@ def HPgetMainInfo(request):
         lowRiskProperty = getUserRiskProperty(passPort,'lowRisk')
         totalProperty = highRiskProperty + middleRiskProperty + lowRiskProperty
 
-        highPercent = highRiskProperty / totalProperty
-        middlePercent = middleRiskProperty / totalProperty
-        lowPercent = lowRiskProperty / totalProperty
+
+        if totalProperty:
+            highPercent = highRiskProperty / totalProperty
+            middlePercent = middleRiskProperty / totalProperty
+            lowPercent = lowRiskProperty / totalProperty
+        else:
+            highPercent = 0
+            middlePercent = 0
+            lowPercent = 0
 
         totalProfit = getUserTotalProfit(passPort)
 
