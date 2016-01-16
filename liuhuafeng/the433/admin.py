@@ -70,3 +70,12 @@ class UserDayProfitAdmin(admin.ModelAdmin):
 
 admin.site.register(UserDayProfit, UserDayProfitAdmin)
 
+class VersionAdmin(admin.ModelAdmin):
+    """docstring for UserDayProfitAdmin"""
+    list_display = ('name','date','isForced','title','content')
+    list_filter = ('name','date','isForced')
+    ordering = ('name','date','isForced')
+
+admin.site.register(Version, VersionAdmin)
+
+

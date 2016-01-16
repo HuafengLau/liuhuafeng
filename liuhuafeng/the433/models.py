@@ -126,3 +126,22 @@ class UserDayProfit(models.Model):
 		verbose_name_plural = u'用户每日收益表'
 
 
+class Version(models.Model):
+	"""docstring for UserDayProfit"""
+	date = models.DateField(verbose_name=u'日期')
+	name = models.CharField(max_length=20,verbose_name=u'版本号')
+	isForced = models.BooleanField(default=False,verbose_name=u'是否强制升级')
+	title = models.CharField(max_length=50,verbose_name=u'标题')
+	content = models.CharField(max_length=200,verbose_name=u'内容')
+
+	def __unicode__(self):
+		return u'%s,%s' % (self.name, self.date)
+
+	class Meta:
+		ordering = ['date','name','isForced']
+		verbose_name = u'版本'
+		verbose_name_plural = u'版本'
+
+
+
+

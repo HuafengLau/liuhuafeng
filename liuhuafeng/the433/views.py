@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 import json
-from the433.models import PassPort,Profile,Fund,FundNet,UserFundShare,UserFundProfit,UserFundOldProfit,UserDayProfit
+from the433.models import PassPort,Profile,Fund,FundNet,UserFundShare,UserFundProfit,UserFundOldProfit,UserDayProfit,Version
 from bs4 import BeautifulSoup
 import urllib2
 from django.views.decorators.csrf import csrf_exempt
@@ -61,6 +61,11 @@ def register(request):
                 newProfile.save()
                 response_data['meta']['code'] = 200
                 response_data['meta']['msg'] = '注册成功'
+
+                response_data['data'] = {}
+                response_data['data']['phone'] = newPassPort.phone
+                response_data['data']['nicName'] = newPassPort.nicName
+
             finally:
                 return HttpResponse(json.dumps(response_data), 
                     content_type='application/json')
@@ -97,6 +102,11 @@ def login(request):
             passPortExist = PassPort.objects.get(phone=phone,pwd=pwd)
             response_data['meta']['code'] = 200
             response_data['meta']['msg'] = '登录成功'
+
+            response_data['data'] = {}
+            response_data['data']['phone'] = passPortExist.phone
+            response_data['data']['nicName'] = passPortExist.nicName
+
         except Exception, e:
             response_data['meta']['code'] = 201
             response_data['meta']['msg'] = '登录失败'
@@ -920,6 +930,11 @@ def editNicName(request):
         profile.save()
         response_data['meta']['code'] = 200
         response_data['meta']['msg'] = 'success'
+
+        response_data['data'] = {}
+        response_data['data']['phone'] = passPort.phone
+        response_data['data']['nicName'] = passPort.nicName
+
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
@@ -928,6 +943,93 @@ def editNicName(request):
         response_data['meta']['msg'] = 'PRM error'
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
+
+@csrf_exempt
+def deleteFund(request):
+    response_data = {
+        "meta":{
+            "code":0,
+            "msg":''
+        },
+        "data":""
+    }
+    if 'phone' in request.POST and 'fundCode' in request.POST:      
+        phone = request.POST.get('phone')
+        code = request.POST.get('fundCode')
+
+        #检查手机号是否存在
+        try:       
+            passPort = phoneGetPassPort(phone)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'passPort not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        try:
+            fund = Fund.objects.get(code=code)
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'fund not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        try:
+            fundShare = UserFundShare.objects.get(passPort=passPort,fund=fund)
+            fundShare.delete()
+            msg = 'delete fundshare;'
+        except Exception, e:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'fundShare not found'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        
+        fundProfits = UserFundProfit.objects.filter(passPort=passPort,fund=fund)
+        if fundProfits:
+            fundProfits.delete()
+            msg += 'delete fundProfits;'
+        
+        oldProfit = UserFundOldProfit.objects.filter(passPort=passPort,fund=fund)
+        if oldProfit:
+            oldProfit.delete()
+            msg += 'delete oldProfit'
+
+        response_data['meta']['code'] = 200
+        response_data['meta']['msg'] = msg
+        return HttpResponse(json.dumps(response_data), 
+            content_type='application/json')
+
+def versionUpdate(request):
+    response_data = {
+        "meta":{
+            "code":0,
+            "msg":''
+        },
+        "data":""
+    }
+    if 'version' in request.POST:
+        version = request.POST.get('version')
+
+        latestVersion = Version.objects.all().latest('date')
+        if version == latestVersion.name:
+            response_data['meta']['code'] = 200
+            response_data['meta']['msg'] = 'already latest'
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
+        else:
+            response_data['meta']['code'] = 201
+            response_data['meta']['msg'] = 'not latest'
+
+            response_data['data'] = {}
+            response_data['data']['isForced'] = str(latestVersion.isForced)
+            response_data['data']['title'] = latestVersion.title
+            response_data['data']['content'] = latestVersion.content
+
+            return HttpResponse(json.dumps(response_data), 
+                content_type='application/json')
+
 
 def test(request):
     response_data = {
