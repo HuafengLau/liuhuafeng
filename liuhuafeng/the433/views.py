@@ -1006,6 +1006,8 @@ def deleteFund(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
+#获取版本升级信息
+@csrf_exempt
 def versionUpdate(request):
     response_data = {
         "meta":{
