@@ -201,7 +201,7 @@ def addFund(fundCode):
                 cxCode = ''
             )        
             newFund.save()
-            return True
+            return 'success'
         else:
             return 'wrong, %s fundInfo is %s' % (fundCode,fundInfo)
     except Exception, e:
