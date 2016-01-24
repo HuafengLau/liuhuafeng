@@ -902,6 +902,7 @@ def editShare(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
+#编辑昵称
 @csrf_exempt
 def editNicName(request):
     response_data = {
@@ -924,16 +925,8 @@ def editNicName(request):
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
 
-        try:
-            profile = Profile.objects.get(passPort=passPort)
-        except Exception, e:
-            response_data['meta']['code'] = 201
-            response_data['meta']['msg'] = 'profile not found'
-            return HttpResponse(json.dumps(response_data), 
-                content_type='application/json')
-
-        profile.nicName = nicName
-        profile.save()
+        passPort.nicName = nicName
+        passPort.save()
         response_data['meta']['code'] = 200
         response_data['meta']['msg'] = 'success'
 
@@ -950,6 +943,7 @@ def editNicName(request):
         return HttpResponse(json.dumps(response_data), 
             content_type='application/json')
 
+#删除基金
 @csrf_exempt
 def deleteFund(request):
     response_data = {
