@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^discover/', discover),
     url(r'^contents/', contents),
     url(r'^blog/', include('blog.urls')),
-    url(r'^the433/', include('the433.urls')),
+    #url(r'^the433/', include('the433.urls')),
     url(r'^admin/', include(admin.site.urls)),
     
     (r'^appmedia/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
