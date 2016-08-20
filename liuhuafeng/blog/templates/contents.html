@@ -10,6 +10,12 @@ Huafeng的思考/文字/刘华峰
 <div class='container-fluid'>
     <div class='row'>
         <div class='col-md-6 col-md-offset-2 col-xs-offset-1 col-xs-10'>
+            <h3>2016年</h3>
+            {% for blog in blogs_2016 %}
+            <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>
+            &nbsp;&nbsp;<small><span style='color:#666666'>{% showCommentWords2 blog %}</span></small>
+            </p>
+            {% endfor %}
             <h3>2015年</h3>
             {% for blog in blogs_2015 %}
             <p><a href='/blog/{{blog.id}}/'>{% showBlogMD blog %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{blog.title}}</a>

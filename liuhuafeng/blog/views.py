@@ -39,6 +39,7 @@ def discover(request):
         context_instance=RequestContext(request))
         
 def contents(request):
+    blogs_2016 = Blog.objects.filter(time__year=2016).exclude(title__in = hidden)
     blogs_2015 = Blog.objects.filter(time__year=2015).exclude(title__in = hidden)
     blogs_2014 = Blog.objects.filter(time__year=2014).exclude(title__in = hidden)
     return render_to_response('contents.html',locals(),

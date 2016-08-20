@@ -13,6 +13,10 @@ urlpatterns = patterns('the433.views',
     url(r'^funddetali/editshare/$', 'editShare', name='editShare'),
     url(r'^passport/editnicname/$', 'editNicName', name='editNicName'),
     url(r'^version/update/$', 'versionUpdate', name='versionUpdate'),
+    url(r'^repair/UserDayFundProfit/(?P<fromDay>d{8})/(?P<toDay>d{8})/$', 'repairUserDayFundProfit', name='repairUserDayFundProfit'),
     url(r'^test/$', 'test', name='test'),
 
 )
+
+
+(?P<year>d{4})

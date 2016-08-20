@@ -229,7 +229,6 @@ def updateFundNet(fundCode):
             thatDay = datetime.date(year,month,day)
             try:
                 fundNetExist = FundNet.objects.get(fund=fund,date=thatDay)
-                pass
             except Exception, e:               
                 newFundNet = FundNet(
                     fund = fund,
@@ -1031,6 +1030,49 @@ def versionUpdate(request):
 
             return HttpResponse(json.dumps(response_data), 
                 content_type='application/json')
+
+#把所有基金净值更新一遍
+@csrf_exempt
+def repairFundNet(request):
+    response_data = {
+        "meta":{
+            "code":000,
+            "msg":''
+        },
+        "data":""
+    }
+
+    funds = Fund.objects.all()
+
+    repairFundNetNum = 0
+    for fund in funds:
+        if updateFundNet(fund.code):
+            repairFundNetNum += 1
+
+    response_data['meta']['msg'] = '%s' % repairFundNetNum
+    
+    if repairFundNetNum:
+        response_data['meta']['code'] = 200
+    else:
+        response_data['meta']['code'] = 201
+
+    return HttpResponse(json.dumps(response_data), 
+        content_type='application/json')
+
+
+#更新从某一天到某一天之间，所有基金的每日净值
+@csrf_exempt
+def repairUserDayFundProfit(request，fromDay, toDay):
+    response_data = {
+        "meta":{
+            "code":000,
+            "msg":''
+        },
+        "data":""
+    }
+
+    fromDate = datetime.date(year,month,day)
+
 
 
 def test(request):
