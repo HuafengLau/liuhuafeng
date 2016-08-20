@@ -17,6 +17,3 @@ urlpatterns = patterns('the433.views',
     url(r'^test/$', 'test', name='test'),
 
 )
-
-
-(?P<year>d{4})
